@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    private DoubleDoorController _doubleDoorController;
-    [SerializeField] private GameObject door;
 
 
+    [SerializeField] private float _interactDistance = 2f;
     // BINDING  KEYS
     [SerializeField] private KeyCode _interact = KeyCode.E;
 
@@ -15,18 +14,16 @@ public class Character : MonoBehaviour
     private CommandDoor _commandOpenDoor;
     #endregion
 
-    void Start()
-    {
-        _doubleDoorController = door.GetComponent<DoubleDoorController>();
-
-        _commandOpenDoor = new CommandDoor(_doubleDoorController);
-
-    }
-
     void Update()
     {
-        if (Input.GetKeyDown(_interact)) EventQueueManager.instance.AddEvent(_commandOpenDoor);
-
+        if (Input.GetKeyDown(_interact)) {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.forward, out hit, _interactDistance)) {
+                if (hit.transform.CompareTag("Console")) {
+                    EventQueueManager.instance.AddEvent(new CommandDoor(hit.transform.parent.GetComponent<IDoor>()));
+                }
+            }
+        }
     }
 
 }

@@ -10,7 +10,7 @@ public class DoubleDoorController : MonoBehaviour, IDoor
     
 
     #region IDOOR_PROPERTIES
-    public GameObject Door => GameObject.Find("Door_Double");
+    public GameObject Door => transform.Find("Door_Double").gameObject;
     #endregion
 
     void Start()

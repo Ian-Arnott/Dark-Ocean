@@ -22,6 +22,7 @@ public class SingleDoorController : MonoBehaviour, IDoor
         if(!_isOpen)
         {
             Door.transform.position += new Vector3(0f, 2.5f, 0f);
+            _isOpen = true;
         }
     }
 }

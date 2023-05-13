@@ -26,9 +26,9 @@ public class DoubleDoorController : MonoBehaviour, IDoor
         if(!_isOpen)
         {
             // Move the left door to the left
-            _leftDoor.transform.position += new Vector3(0f, 0f, -1f);
+            _leftDoor.transform.position += _leftDoor.transform.right;
             // Move the right door to the right
-            _rightDoor.transform.position += new Vector3(0f, 0f, 1f);
+            _rightDoor.transform.position -= _rightDoor.transform.right;
             _isOpen = true;
         }
     }

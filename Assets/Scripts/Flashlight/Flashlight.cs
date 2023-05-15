@@ -5,10 +5,10 @@ using UnityEngine;
 public class Flashlight : MonoBehaviour, ILight
 {
     [SerializeField] protected LightStats _stats;
-    private bool _isOn;
+    [SerializeField] protected GameObject _lightObject;
+    protected bool _isOn;
 
     #region LIGHT_PROPERTIES
-    [SerializeField] protected float _batteryRate;
     [SerializeField] protected float _batteryLife;
 
     #endregion
@@ -17,14 +17,13 @@ public class Flashlight : MonoBehaviour, ILight
     public float BatteryLife => _stats.BatteryLife;
     public float BatteryRate => _stats.BatteryRate;
     public float Intensity => _stats.Intensity;
-
+    public float Range => _stats.Range;
     public GameObject LightPrefab => _stats.LightPrefab;
     #endregion
 
     #region UNITY_EVENTS
     private void Start()
     {
-        _batteryRate = BatteryRate;
         _batteryLife = BatteryLife;
         _isOn = false;
         // UI_Updater();
@@ -32,35 +31,40 @@ public class Flashlight : MonoBehaviour, ILight
 
     private void Update()
     {
-        if (_isOn) _batteryLife -= _batteryRate * Time.deltaTime;
+        if (_isOn) _batteryLife -= BatteryRate * Time.deltaTime;
+        if (_isOn && _batteryLife < 0) Toggle();
     }
     #endregion
 
     #region I_LIGHT_PROPERTIES
-    private GameObject lightObject;
     public virtual void Toggle()
     {
         if (!_isOn && _batteryLife > 0)
         {
-            lightObject = Instantiate(LightPrefab, transform.position, transform.rotation);
-            lightObject.GetComponent<Light>().intensity = Intensity;
-            lightObject.transform.parent = transform;
-            
+            _lightObject = Instantiate(LightPrefab, transform.position, transform.rotation);
+            _lightObject.GetComponent<Light>().intensity = Intensity;
+            _lightObject.GetComponent<Light>().range = Range;
+            _lightObject.transform.parent = transform;
+
             // Define the rotation quaternion
             Quaternion xRotation = Quaternion.AngleAxis(-90, Vector3.right);
             // Apply the rotation to the lightObject
-            lightObject.transform.rotation = lightObject.transform.rotation * xRotation;
-            
+            _lightObject.transform.rotation = _lightObject.transform.rotation * xRotation;
+
+            // Move the _lightObject on the local Y axis by 1
+            _lightObject.transform.localPosition += new Vector3(0, 0.175f, 0);
+
             _isOn = true;
             // UI_Updater();
         }
         else
         {
-            Destroy(lightObject);
+            Destroy(_lightObject);
             _isOn = false;
             // UI_Updater();
         }
     }
+
     #endregion
 
     // public void UI_Updater() => EventManager.instance.BatteryChange(_batteryLife);

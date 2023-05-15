@@ -15,6 +15,7 @@ MonoBehaviour:
   _stats:
     LightPrefab: {fileID: 6976699240193738641, guid: 53fcb3affc681848eaa25328f43c4cbb,
       type: 3}
-    Intensity: 4
+    Intensity: 100
+    Range: 100
     BatteryLife: 100
-    BatteryRate: 3
+    BatteryRate: 0.7

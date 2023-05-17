@@ -52,7 +52,7 @@ public class Flashlight : MonoBehaviour, ILight
             _lightObject.transform.rotation = _lightObject.transform.rotation * xRotation;
 
             // Move the _lightObject on the local Y axis by 1
-            _lightObject.transform.localPosition += new Vector3(0, 0.175f, 0);
+            _lightObject.transform.localPosition += new Vector3(0, 0.165f, 0);
 
             _isOn = true;
             // UI_Updater();

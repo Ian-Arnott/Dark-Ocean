@@ -39,7 +39,7 @@ public class Character : MonoBehaviour
                 }
             }
         }
-        if (Input.GetKeyDown(_toggle)) EventQueueManager.instance.AddEvent(_commandLight);
+        if (Input.GetKeyDown(_toggle)) EventQueueManager.instance.AddEventToQueue(_commandLight);
         if (Input.GetKeyDown(_flashlight)) ChangeWeapon(0);
         if (Input.GetKeyDown(_lantern)) ChangeWeapon(1);
 

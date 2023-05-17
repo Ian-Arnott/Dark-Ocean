@@ -31,5 +31,11 @@ public class DoubleDoorController : MonoBehaviour, IDoor
             _rightDoor.transform.position -= _rightDoor.transform.right;
             _isOpen = true;
         }
+        else
+        {
+            _leftDoor.transform.position -= _leftDoor.transform.right;
+            _rightDoor.transform.position += _rightDoor.transform.right;
+            _isOpen = false;
+        }
     }
 }

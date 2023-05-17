@@ -17,38 +17,30 @@ public class EventManager : MonoBehaviour
 
     #region GAME_MANAGER
     public event Action<bool> OnGameOver;
+    public event Action OnKeyPickup;
 
     public void EventGameOver(bool isVictory) 
     {
         if (OnGameOver != null) OnGameOver(isVictory);
     }
+
+    public void EventKeyPickup() 
+    {
+        if (OnGameOver != null) OnKeyPickup();
+    }
     #endregion
 
     #region IN_GAME_UI
-    public event Action<int, int> OnAmmoChange;
-    public event Action<float, float> OnCharacterLifeChange;
-    public event Action<int> OnCoinPickup;
+    public event Action<int, int> OnBatteryChange;
     public event Action<int> OnLigtChange;
-    public event Action OnAvatarChange;
-
-    public void AmmoChange(int currentAmmo, int maxAmmo)
+    public void BatteryChange(int currentBattery, int maxBattery)
     {
-        if (OnAmmoChange != null) OnAmmoChange(currentAmmo, maxAmmo);
-    }
-
-    public void CharacterLifeChange(float currentLife, float maxLife)
-    {
-        if (OnCharacterLifeChange != null) OnCharacterLifeChange(currentLife, maxLife);
+        if (OnBatteryChange != null) OnBatteryChange(currentBattery, maxBattery);
     }
 
     public void LightChange(int lightIndex)
     {
         if (OnLigtChange != null) OnLigtChange(lightIndex);
-    }
-
-    public void AvatarChange()
-    {
-        if (OnAvatarChange != null) OnAvatarChange();
     }
     #endregion
 }

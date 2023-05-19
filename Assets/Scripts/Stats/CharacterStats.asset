@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CharacterStats
   m_EditorClassIdentifier: 
   _statValues:
-    MaxLife: 100
+    MaxSpeed: 7
     MovementSpeed: 5

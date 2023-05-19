@@ -43,4 +43,18 @@ public class EventManager : MonoBehaviour
         if (OnLigtChange != null) OnLigtChange(lightIndex);
     }
     #endregion
+
+    #region IN_GAME_AUDIO
+    public event Action OnDoorChange;
+    public event Action OnLigtOnOffChange;
+    public void LigtOnOffChange()
+    {
+        if (OnLigtOnOffChange != null) OnLigtOnOffChange();
+    }
+
+    public void DoorChange()
+    {
+        if (OnDoorChange != null) OnDoorChange();
+    }
+    #endregion
 }

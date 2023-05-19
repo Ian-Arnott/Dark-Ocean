@@ -4,6 +4,10 @@ using TMPro;
 
 public class UI_ButtonLogic : MonoBehaviour
 {
+    public void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
     public void LoadMenuScene() => SceneManager.LoadScene("StartScene");
     public void LoadLevelScene() => SceneManager.LoadScene("LoadLevelScene");
     public void LoadEndgameScene() => SceneManager.LoadScene("EndScene");

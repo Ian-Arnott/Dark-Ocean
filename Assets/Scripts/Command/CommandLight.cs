@@ -14,6 +14,7 @@ public class CommandLight : ICommand
     public void Execute() 
     {
         _light.Toggle();
+        EventManager.instance.LigtOnOffChange();
         // EventManager.instance.AvatarChange();
     }
 }

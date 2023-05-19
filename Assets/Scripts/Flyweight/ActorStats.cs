@@ -7,13 +7,13 @@ public class ActorStats : ScriptableObject
 {
     [SerializeField] private StatValues _statValues;
 
-    public int MaxLife => _statValues.MaxLife;
+    public float MaxSpeed => _statValues.MaxSpeed;
     public float MovementSpeed => _statValues.MovementSpeed;
 }
 
 [System.Serializable]
 public struct StatValues
 {
-    public int MaxLife;
+    public float MaxSpeed;
     public float MovementSpeed;
 }

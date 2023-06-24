@@ -16,6 +16,6 @@ MonoBehaviour:
     LightPrefab: {fileID: 6789183195974510777, guid: 3f20ebd031619fc519c74fc8541e099e,
       type: 3}
     Intensity: 1
-    Range: 10
+    Range: 5
     BatteryLife: 100
     BatteryRate: 0.4

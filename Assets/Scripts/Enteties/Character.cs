@@ -38,6 +38,7 @@ public class Character : MonoBehaviour
                     EventQueueManager.instance.AddEvent(new CommandDoor(hit.transform.parent.GetComponent<IDoor>()));
                 }
             }
+            Debug.DrawRay(transform.position, transform.forward * _interactDistance, Color.green, 1f); // Draw the raycast
         }
         if (Input.GetKeyDown(_toggle)) EventQueueManager.instance.AddEventToQueue(_commandLight);
         if (Input.GetKeyDown(_flashlight)) ChangeWeapon(0);

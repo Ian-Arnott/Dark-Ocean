@@ -15,7 +15,7 @@ public class UI_ButtonLogic : MonoBehaviour
     
     public void ChangeTextColorHover(GameObject text)
     {
-        text.GetComponent<TextMeshProUGUI>().color = Color.gray;
+        text.GetComponent<TextMeshProUGUI>().color = Color.white;
     }
     
     public void ChangeTextColorExit(GameObject text)

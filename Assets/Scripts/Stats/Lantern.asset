@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: Lantern
   m_EditorClassIdentifier: 
   _stats:
-    LightPrefab: {fileID: 6789183195974510777, guid: 3f20ebd031619fc519c74fc8541e099e,
-      type: 3}
     Intensity: 1
-    Range: 5
+    Range: 6
     BatteryLife: 100
-    BatteryRate: 0.4
+    BatteryRate: 0.83

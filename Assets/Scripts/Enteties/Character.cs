@@ -52,9 +52,7 @@ public class Character : MonoBehaviour
         foreach (var light in _flashlights) light.gameObject.SetActive(false);
         _flashlights[index].gameObject.SetActive(true);
         EventManager.instance.LightChange(index);
-        
         _flash = _flashlights[index];
-        // _flash.UI_Updater();
         _commandLight = new CommandLight(_flash);
     }
 

@@ -31,16 +31,16 @@ public class EventManager : MonoBehaviour
     #endregion
 
     #region IN_GAME_UI
-    public event Action<int, int> OnBatteryChange;
-    public event Action<int> OnLigtChange;
-    public void BatteryChange(int currentBattery, int maxBattery)
+    public event Action<float, float> OnBatteryChange;
+    public event Action<int> OnLightChange;
+    public void BatteryChange(float currentBattery, float maxBattery)
     {
         if (OnBatteryChange != null) OnBatteryChange(currentBattery, maxBattery);
     }
 
     public void LightChange(int lightIndex)
     {
-        if (OnLigtChange != null) OnLigtChange(lightIndex);
+        if (OnLightChange != null) OnLightChange(lightIndex);
     }
     #endregion
 

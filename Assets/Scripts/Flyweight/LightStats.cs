@@ -11,13 +11,11 @@ public class LightStats : ScriptableObject
     public float BatteryRate => _stats.BatteryRate;
     public float Intensity => _stats.Intensity;
     public float Range => _stats.Range;
-    public GameObject LightPrefab => _stats.LightPrefab;
 }
 
 [System.Serializable]
 public struct StatsValues
 {
-    public GameObject LightPrefab; 
     public float Intensity;
     public float Range;
     public float BatteryLife;

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> _back;
     [SerializeField] private List<GameObject> _charge;
+    [SerializeField] private GameObject _warningBar;
 
     /* Text References */
 
@@ -22,6 +23,7 @@ public class UIManager : MonoBehaviour
         /* Suscripcion de eventos */
         EventManager.instance.OnLightChange += UpdateLight;
         EventManager.instance.OnBatteryChange += UpdateBattery;
+        EventManager.instance.OnLookTimeChange += UpdateBar;
 
     }
 
@@ -38,6 +40,11 @@ public class UIManager : MonoBehaviour
     private void UpdateBattery(float current, float max)
     {
         _charge[_currentIdx].GetComponent<Image>().fillAmount = current/100;
+    } 
+
+    private void UpdateBar(float current)
+    {
+        _warningBar.GetComponent<Image>().fillAmount = current/5;
     } 
 
 }

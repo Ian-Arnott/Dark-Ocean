@@ -32,7 +32,14 @@ public class EventManager : MonoBehaviour
 
     #region IN_GAME_UI
     public event Action<float, float> OnBatteryChange;
+    public event Action<float> OnLookTimeChange;
+
     public event Action<int> OnLightChange;
+
+    public void LookTimeChange(float currentTime)
+    {
+        if (OnBatteryChange != null) OnLookTimeChange(currentTime);
+    }
     public void BatteryChange(float currentBattery, float maxBattery)
     {
         if (OnBatteryChange != null) OnBatteryChange(currentBattery, maxBattery);

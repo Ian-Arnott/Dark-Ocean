@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5994170706331412769}
   - component: {fileID: 5994170706331412770}
+  - component: {fileID: 9150803687042931015}
   m_Layer: 0
   m_Name: SIngle Door
   m_TagString: Untagged
@@ -48,6 +49,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isOpen: 0
+--- !u!95 &9150803687042931015
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5994170706331412771}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 50bed1555027e9d2ba8c91804264258b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &5994170705553542274
 PrefabInstance:
   m_ObjectHideFlags: 0

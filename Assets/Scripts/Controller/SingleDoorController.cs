@@ -6,7 +6,8 @@ public class SingleDoorController : MonoBehaviour, IDoor
 {
 
     [SerializeField] private bool _isOpen;
-    
+    [SerializeField] private Animator _animator;
+
 
     #region IDOOR_PROPERTIES
     public GameObject Door => transform.Find("Door_Single").gameObject;
@@ -21,12 +22,12 @@ public class SingleDoorController : MonoBehaviour, IDoor
     {
         if(!_isOpen)
         {
-            Door.transform.position += new Vector3(0f, 2.5f, 0f);
+            _animator.Play("SingleDoorOpen",0,0.0f);
             _isOpen = true;
         }
         else
         {
-            Door.transform.position -= new Vector3(0f, 2.5f, 0f);
+            _animator.Play("SingleDoorClose",0,0.0f);
             _isOpen = false;            
         }
     }

@@ -6,6 +6,7 @@ public class DoubleDoorController : MonoBehaviour, IDoor
 {
     [SerializeField] private GameObject _leftDoor;    
     [SerializeField] private GameObject _rightDoor;
+    [SerializeField] private Animator _animator;
     [SerializeField] private bool _isOpen;
     
 
@@ -25,16 +26,18 @@ public class DoubleDoorController : MonoBehaviour, IDoor
     {
         if(!_isOpen)
         {
-            // Move the left door to the left
-            _leftDoor.transform.position += _leftDoor.transform.right;
-            // Move the right door to the right
-            _rightDoor.transform.position -= _rightDoor.transform.right;
+            // // Move the left door to the left
+            // _leftDoor.transform.position += _leftDoor.transform.right;
+            // // Move the right door to the right
+            // _rightDoor.transform.position -= _rightDoor.transform.right;
+            _animator.Play("DoubleDoorOpen",0,0.0f);
             _isOpen = true;
         }
         else
         {
-            _leftDoor.transform.position -= _leftDoor.transform.right;
-            _rightDoor.transform.position += _rightDoor.transform.right;
+            // _leftDoor.transform.position -= _leftDoor.transform.right;
+            // _rightDoor.transform.position += _rightDoor.transform.right;
+            _animator.Play("DoubleDoorClose",0,0.0f);
             _isOpen = false;
         }
     }

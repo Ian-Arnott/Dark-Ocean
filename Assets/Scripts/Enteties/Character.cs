@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-
-
     [SerializeField] private float _interactDistance = 2f;
     [SerializeField] private Flashlight _flash;
 
     // BINDING  KEYS
     [SerializeField] private KeyCode _interact = KeyCode.E;
     [SerializeField] private KeyCode _toggle = KeyCode.Mouse0;
-
+    [SerializeField] private KeyCode _throwFlashbang = KeyCode.Mouse1;
 
     #region COMMANDS
-    private CommandDoor _commandOpenDoor;
     private CommandLight _commandLight;
     #endregion
 
@@ -24,6 +21,11 @@ public class Character : MonoBehaviour
     [SerializeField] private KeyCode _lantern = KeyCode.Alpha2;
     [SerializeField] private List<Flashlight> _flashlights;
     private bool _isOn;
+
+    // FLASHBANG PREFAB
+    [SerializeField] private GameObject _flashbangPrefab;
+    [SerializeField] private Transform _throwPoint;
+
     void Start()
     {
         _isOn = false;
@@ -52,8 +54,11 @@ public class Character : MonoBehaviour
         if (Input.GetKeyDown(_flashlight)) ChangeInventory(0);
         if (Input.GetKeyDown(_lantern)) ChangeInventory(1);
 
+        if (Input.GetKeyDown(_throwFlashbang))
+        {
+            ThrowFlashbang();
+        }
     }
-
 
     private void ChangeInventory(int index)
     {
@@ -69,4 +74,10 @@ public class Character : MonoBehaviour
         _commandLight = new CommandLight(_flash);
     }
 
+    private void ThrowFlashbang()
+    {
+        GameObject flashbang = Instantiate(_flashbangPrefab, _throwPoint.position, _throwPoint.rotation);
+        IThrowable throwable = flashbang.GetComponent<IThrowable>();
+        throwable.Throw();
+    }
 }

@@ -19,6 +19,8 @@ public class EventManager : MonoBehaviour
     public event Action<bool> OnGameOver;
     public event Action OnKeyPickup;
 
+    public event Action OnStun;
+
     public void EventGameOver(bool isVictory) 
     {
         if (OnGameOver != null) OnGameOver(isVictory);
@@ -26,12 +28,17 @@ public class EventManager : MonoBehaviour
 
     public void EventKeyPickup() 
     {
-        if (OnGameOver != null) OnKeyPickup();
+        if (OnKeyPickup != null) OnKeyPickup();
+    }
+    public void EventStun() 
+    {
+        if (OnStun != null) OnStun();
     }
     #endregion
 
     #region IN_GAME_UI
     public event Action<float, float> OnBatteryChange;
+    public event Action<float, float> OnSprint;
     public event Action<float> OnLookTimeChange;
 
     public event Action<int> OnLightChange;
@@ -43,6 +50,11 @@ public class EventManager : MonoBehaviour
     public void BatteryChange(float currentBattery, float maxBattery)
     {
         if (OnBatteryChange != null) OnBatteryChange(currentBattery, maxBattery);
+    }
+
+    public void Sprint(float remaining, float maxSprintTime)
+    {
+        if (OnSprint != null) OnSprint(remaining, maxSprintTime);
     }
 
     public void LightChange(int lightIndex)

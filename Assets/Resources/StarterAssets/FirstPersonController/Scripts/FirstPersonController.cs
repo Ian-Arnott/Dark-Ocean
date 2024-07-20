@@ -6,32 +6,35 @@ using UnityEngine.InputSystem;
 namespace StarterAssets
 {
 	[RequireComponent(typeof(CharacterController))]
+	[RequireComponent(typeof(Actor))]
 #if ENABLE_INPUT_SYSTEM
 	[RequireComponent(typeof(PlayerInput))]
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
-		[Header("Player")]
-		[Tooltip("Move speed of the character in m/s")]
-		public float MoveSpeed = 4.0f;
-		[Tooltip("Sprint speed of the character in m/s")]
-		public float SprintSpeed = 6.0f;
+		// [Header("Player")]
+		// [Tooltip("Move speed of the character in m/s")]
+		public float MoveSpeed => GetComponent<Actor>()._stats.MovementSpeed;
+		// [Tooltip("Sprint speed of the character in m/s")]
+		public float SprintSpeed => GetComponent<Actor>()._stats.MaxSpeed;
+		[Tooltip("Sprint Cooldown")]
+		public float SprintCooldown = 2.5f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
-		[Space(10)]
-		[Tooltip("The height the player can jump")]
-		public float JumpHeight = 1.2f;
-		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-		public float Gravity = -15.0f;
+		// [Space(10)]
+		// [Tooltip("The height the player can jump")]
+		private float JumpHeight = 1.2f;
+		// [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
+		private float Gravity = -15.0f;
 
 		[Space(10)]
-		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-		public float JumpTimeout = 0.1f;
-		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
-		public float FallTimeout = 0.15f;
+		// [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
+		private float JumpTimeout = 0.1f;
+		// [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
+		private float FallTimeout = 0.15f;
 
 		[Header("Player Grounded")]
 		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
@@ -64,7 +67,12 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-	
+		// sprint
+		private float _remainingSprintTime;
+		public float MaxSprintTime = 5.0f; // maximum sprint duration
+		private bool _isSprinting;
+		private bool _waitSprinting;
+
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -102,12 +110,14 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
 			_playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+			Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+			_remainingSprintTime = MaxSprintTime; // initialize remaining sprint time
+			_waitSprinting = false;
 		}
 
 		private void Update()
@@ -115,6 +125,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			UpdateSprintTime();
 		}
 
 		private void LateUpdate()
@@ -153,8 +164,8 @@ namespace StarterAssets
 
 		private void Move()
 		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			// set target speed based on move speed, sprint speed and if sprint is pressed and sprint time is available
+			float targetSpeed = (_input.sprint && _remainingSprintTime > 0 && !_waitSprinting) ? SprintSpeed : MoveSpeed;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -196,6 +207,38 @@ namespace StarterAssets
 
 			// move the player
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+			// Handle sprinting and cooldown logic
+			if (_input.sprint && _remainingSprintTime > 0 && !_waitSprinting)
+			{
+				_isSprinting = true;
+				_remainingSprintTime -= Time.deltaTime;
+				if (_remainingSprintTime < 0)
+				{
+					_remainingSprintTime = 0;
+					_waitSprinting = true;
+				}
+			}
+			else
+			{
+				_isSprinting = false;
+				targetSpeed = MoveSpeed;
+			}
+		}
+
+		private void UpdateSprintTime()
+		{
+			// Regenerate sprint time when not sprinting
+			if (!_isSprinting)
+			{
+				_remainingSprintTime += Time.deltaTime;
+				if (_remainingSprintTime > MaxSprintTime)
+				{
+					_remainingSprintTime = MaxSprintTime;
+					_waitSprinting = false;
+				}
+			}
+			UI_Updater();
 		}
 
 		private void JumpAndGravity()
@@ -215,7 +258,7 @@ namespace StarterAssets
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
-					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					// _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 				}
 
 				// jump timeout
@@ -264,5 +307,6 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
+		public void UI_Updater() => EventManager.instance.Sprint(_remainingSprintTime,MaxSprintTime);
 	}
 }

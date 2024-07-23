@@ -13,5 +13,6 @@ public class TutorialTrigger : MonoBehaviour
     public void OnTriggerEnter()
     {
         _tmpText.SetText(_text);
+        Destroy(this);
     }
 }

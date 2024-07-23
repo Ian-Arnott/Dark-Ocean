@@ -12,11 +12,6 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Black
-    second: {fileID: 2100000, guid: cb44faa772586423c8230f46a0a47a2f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: DarkAccent
     second: {fileID: 2100000, guid: bcbcecd860d30df619703681eedbc643, type: 2}
   - first:

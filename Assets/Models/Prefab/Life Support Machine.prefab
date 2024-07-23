@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2300087117056690991}
-  - component: {fileID: 7295122442958247476}
   m_Layer: 0
   m_Name: Life Support Machine
   m_TagString: Untagged
@@ -34,20 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &7295122442958247476
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8846654213549590870}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 3.9613492
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.9503914, z: 0}
 --- !u!1001 &6996606451447830665
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,6 +100,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Props_Teleporter_2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c4c442ef5059c150fa9d57035732bb1b,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c4c442ef5059c150fa9d57035732bb1b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4c442ef5059c150fa9d57035732bb1b, type: 3}
 --- !u!4 &7391050211499212642 stripped
@@ -123,6 +118,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6996606451447830665}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7915526795364672984 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c4c442ef5059c150fa9d57035732bb1b,
+    type: 3}
+  m_PrefabInstance: {fileID: 6996606451447830665}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &174490562831353083
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7915526795364672984}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 118882046375868303, guid: c4c442ef5059c150fa9d57035732bb1b, type: 3}
 --- !u!1001 &8403351182607527899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -190,6 +205,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Props_Statue (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a096ba0178f4e50f4a8a0477e33c768c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a096ba0178f4e50f4a8a0477e33c768c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a096ba0178f4e50f4a8a0477e33c768c, type: 3}
 --- !u!4 &8292263936998459440 stripped
@@ -198,3 +223,23 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8403351182607527899}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8673891862528070282 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a096ba0178f4e50f4a8a0477e33c768c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8403351182607527899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1617855260614280872
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673891862528070282}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 587893334102232772, guid: a096ba0178f4e50f4a8a0477e33c768c, type: 3}

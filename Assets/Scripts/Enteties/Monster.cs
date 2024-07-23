@@ -5,19 +5,23 @@ using UnityEngine.AI;
 
 public class Monster : MonoBehaviour
 {
+    [SerializeField] private GameObject _monster;
     [SerializeField] private List<Transform> _locations;
     [SerializeField] private float _timeMax = 5f; // Maximum time to trigger the game end
     [SerializeField] private int _teleportChance = 20; // Chance of teleporting instead of following player
     [SerializeField] private NavMeshAgent _agent; // Reference to the NavMeshAgent component
+    [SerializeField] private Animator _animator;
     [SerializeField] private GameObject _player;
     [SerializeField] private Vector3 _offset;
     [SerializeField] private float _speed;
     private float _currentTime = 0f; // Current time the player has been looking at the monster
     private float _timeSinceTeleported = 0f;
+    private float _timeSinceMoving = 0f;
     private bool _isFollowing = false; // Flag to indicate if the monster is following the player
     private bool _teleported = true;
     private bool _detected = false;
     private bool _seen = false;
+    private bool _isMoving = false;
     private Vector3 _previousPosition;
 
     private void Start()
@@ -28,27 +32,28 @@ public class Monster : MonoBehaviour
         _previousPosition = transform.position;
         TeleportToLocation(_locations[0]); // Start at the first location
         EventManager.instance.OnKeyPickup += IncreaseDifficulty;
+        EventManager.instance.OnStun += HandleStun;
+        EventManager.instance.OnGameOver += HandleGameOver;
     }
 
     void Update()
     {
+        _isMoving = _agent.velocity.sqrMagnitude > 0.1f;
+        _animator.SetBool("isMoving",_isMoving);
         if(_teleported) _timeSinceTeleported += Time.deltaTime;
-
+        if(!_isMoving) _timeSinceMoving += Time.deltaTime;
         if (IsMonsterVisible() && DetectPlayer()) HandleVisibleMonster();
         else HandleInvisibleMonster();
-
     }
 
     private void HandleVisibleMonster()
     {
-        _currentTime += Time.deltaTime;
-        EventManager.instance.LookTimeChange(_currentTime);
-
-        if (_currentTime >= _timeMax) EventManager.instance.EventGameOver(false);
-
         _agent.enabled = false;
         _isFollowing = false;
         _seen = true;
+        _currentTime += Time.deltaTime;
+        EventManager.instance.LookTimeChange(_currentTime);
+        if (_currentTime >= _timeMax) EventManager.instance.EventGameOver(false);
     }
 
     private void HandleInvisibleMonster()
@@ -65,14 +70,28 @@ public class Monster : MonoBehaviour
         }
 
         int d100 = 0;
-        if (_seen) d100 = Random.Range(0, 100);
+        d100 = Random.Range(0, 100);
 
         if (_seen && !_isFollowing && d100 < _teleportChance) TeleportMonster();
         else if (_seen && !_isFollowing && d100 >= _teleportChance) FollowPlayer();
         else if (!_seen && _isFollowing && d100 >= _teleportChance) FollowPlayer();
         
-        if (_teleported && _timeSinceTeleported >= 2 * _timeMax) TeleportMonster();
+        if (_teleported && _timeSinceTeleported >= _timeMax) TeleportMonster();
+        if (_isFollowing && !_isMoving && _timeSinceMoving >= _timeMax) GoToRoom();
         
+    }
+
+    private void HandleStun()
+    {
+        _agent.enabled = false;
+        _agent.speed = 0f;
+        _seen = false;
+        _teleported = false;
+        _isFollowing = false;
+        _animator.SetTrigger("Stun");
+        _currentTime = 0f;
+        EventManager.instance.LookTimeChange(_currentTime);
+        Invoke("GoToRoom",5.0f);
     }
 
     private void TeleportMonster()
@@ -83,6 +102,21 @@ public class Monster : MonoBehaviour
         _agent.speed = 0f;
         _seen = false;
         _teleported = true;
+        _isFollowing = false;
+        _timeSinceTeleported = 0f;
+        _timeSinceMoving = 0f;
+    }
+
+    private void GoToRoom()
+    {
+        int randomIndex = Random.Range(0, _locations.Count);
+        _agent.enabled = true;
+        _agent.speed = _speed;
+        _agent.SetDestination(_locations[randomIndex].position);
+        _isFollowing = false;
+        _seen = false;
+        _teleported = false;
+        _timeSinceMoving = 0f;
         _timeSinceTeleported = 0f;
     }
 
@@ -94,9 +128,9 @@ public class Monster : MonoBehaviour
         _isFollowing = true;
         _seen = false;
         _teleported = false;
+        _timeSinceMoving = 0f;
         _timeSinceTeleported = 0f;
     }
-
 
     private void IncreaseDifficulty()
     {
@@ -125,10 +159,18 @@ public class Monster : MonoBehaviour
         if (Physics.Raycast(transform.position + _offset, direction, out hit, Mathf.Infinity))
         {
             _detected = hit.transform.CompareTag(_player.tag);
-            // Debug.Log(_detected);
+            //Debug.Log(_detected);
             return _detected;
         }
         return false;
+    }
+
+    private void HandleGameOver(bool isVictory)
+    {
+        if (!isVictory)
+        {
+            _monster.SetActive(false);
+        }
     }
 
 }

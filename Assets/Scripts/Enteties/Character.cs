@@ -26,10 +26,42 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject _flashbangPrefab;
     [SerializeField] private Transform _throwPoint;
 
+    // MONSTER JUMPSCARE
+    [SerializeField] private GameObject _monster;
+    [SerializeField] private Animator _monsterAnimator;
     void Start()
     {
         _isOn = false;
         ChangeInventory(0);
+        EventManager.instance.OnGameOver += HandleGameOver;
+    }
+
+    private void HandleGameOver(bool isVictory)
+    {
+        if (!isVictory)
+        {
+            StartCoroutine(Jumpscare());
+        }
+    }
+
+    IEnumerator Jumpscare()
+    {
+        _monster.SetActive(true);
+        Vector3 startPosition = _monster.transform.position;
+        Vector3 endPosition = startPosition + new Vector3(0,1,0);
+
+        float duration = 1.0f;
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            _monster.transform.position = Vector3.Lerp(startPosition,endPosition,elapsedTime/duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _monster.transform.position = endPosition;
+        _monsterAnimator.Play("Demon|Spasm");
     }
 
     void Update()

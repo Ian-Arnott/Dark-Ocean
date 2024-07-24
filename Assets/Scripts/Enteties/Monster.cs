@@ -14,6 +14,8 @@ public class Monster : MonoBehaviour
     [SerializeField] private GameObject _player;
     [SerializeField] private Vector3 _offset;
     [SerializeField] private float _speed;
+    [SerializeField] private AudioSource _teleportSound;
+    [SerializeField] private AudioSource _chaseSound;
     private float _currentTime = 0f; // Current time the player has been looking at the monster
     private float _timeSinceTeleported = 0f;
     private float _timeSinceMoving = 0f;
@@ -52,6 +54,7 @@ public class Monster : MonoBehaviour
     {
         _isMoving = _agent.velocity.sqrMagnitude > 0.1f;
         _animator.SetBool("isMoving", _isMoving);
+        if ((!_isFollowing || !_detected) && _chaseSound.isPlaying) _chaseSound.Stop();
     }
 
     private void HandleVisibleMonster()
@@ -62,6 +65,10 @@ public class Monster : MonoBehaviour
         _currentTime += Time.deltaTime;
         EventManager.instance.LookTimeChange(_currentTime);
         if (_currentTime >= _timeMax) EventManager.instance.EventGameOver(false);
+        else if (_currentTime > _timeMax / 2 && !_chaseSound.isPlaying) // Play sound cue if player looks too long
+        {
+            _chaseSound.Play();
+        }
     }
 
     private void HandleInvisibleMonster()
@@ -113,8 +120,9 @@ public class Monster : MonoBehaviour
 
     private void TeleportMonster()
     {
-        Transform targetLocation = GetSecondNearestLocation();
+        Transform targetLocation = GetRandomNonClosestLocation();
         TeleportToLocation(targetLocation);
+        _teleportSound.Play(); // Play teleport sound
         _agent.enabled = false;
         _agent.speed = 0f;
         _seen = false;
@@ -127,26 +135,26 @@ public class Monster : MonoBehaviour
     private void GoToRoom()
     {
         Transform targetLocation = GetRandomNonClosestLocation();
-        _agent.enabled = true;
-        _agent.speed = _speed;
-        _agent.SetDestination(targetLocation.position);
-        _isFollowing = false;
-        _seen = false;
-        _teleported = false;
-        _timeSinceMoving = 0f;
-        _timeSinceTeleported = 0f;
+        StartCoroutine(HesitateBeforeMoving(targetLocation));
     }
 
     private void FollowPlayer()
     {
+        StartCoroutine(HesitateBeforeMoving(_player.transform));
+    }
+
+    private IEnumerator HesitateBeforeMoving(Transform target)
+    {
+        yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // Hesitation duration
         _agent.enabled = true;
         _agent.speed = _speed;
-        _agent.SetDestination(_player.transform.position);
+        _agent.SetDestination(target.position);
         _isFollowing = true;
         _seen = false;
         _teleported = false;
         _timeSinceMoving = 0f;
         _timeSinceTeleported = 0f;
+        if (target == _player.transform) _chaseSound.Play(); // Play chase sound if following player
     }
 
     private void IncreaseDifficulty()

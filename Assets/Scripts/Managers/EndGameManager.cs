@@ -9,7 +9,7 @@ public class EndGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _text.text = GlobalVictory.instance.IsVictory ? "VICTORY" : "DEFEAT";
+        _text.text = GlobalVictory.instance.IsVictory ? "YOU ESCAPED" : "YOU DIED";
     }
 
 }

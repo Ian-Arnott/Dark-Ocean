@@ -45,12 +45,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 7e61cc3d33859e07eb86fb1356c36a06,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e61cc3d33859e07eb86fb1356c36a06,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e61cc3d33859e07eb86fb1356c36a06,
         type: 3}
@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 7e61cc3d33859e07eb86fb1356c36a06,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e61cc3d33859e07eb86fb1356c36a06,
         type: 3}
@@ -161,6 +161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddc792be380777f8880cb9409e750548, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flashDuration: 0.2
+  _flashDuration: 0.5
   _maxIntensity: 17
   _rb: {fileID: -2858594738444604628}

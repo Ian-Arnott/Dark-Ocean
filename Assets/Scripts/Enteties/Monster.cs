@@ -23,6 +23,7 @@ public class Monster : MonoBehaviour
     private bool _seen = false;
     private bool _isMoving = false;
     private bool _firstStun = true;
+    private bool _isStunned = false;
 
     private void Start()
     {
@@ -37,12 +38,20 @@ public class Monster : MonoBehaviour
 
     void Update()
     {
-        _isMoving = _agent.velocity.sqrMagnitude > 0.1f;
-        _animator.SetBool("isMoving",_isMoving);
-        if(_teleported) _timeSinceTeleported += Time.deltaTime;
-        if(!_isMoving) _timeSinceMoving += Time.deltaTime;
+        UpdateMovementState();
+        if (_isStunned) return;
+        
+        if (_teleported) _timeSinceTeleported += Time.deltaTime;
+        if (!_isMoving) _timeSinceMoving += Time.deltaTime;
+        
         if (IsMonsterVisible() && DetectPlayer()) HandleVisibleMonster();
         else HandleInvisibleMonster();
+    }
+
+    private void UpdateMovementState()
+    {
+        _isMoving = _agent.velocity.sqrMagnitude > 0.1f;
+        _animator.SetBool("isMoving", _isMoving);
     }
 
     private void HandleVisibleMonster()
@@ -76,30 +85,36 @@ public class Monster : MonoBehaviour
         
         if (_teleported && _timeSinceTeleported >= _timeMax) TeleportMonster();
         if (_isFollowing && !_isMoving && _timeSinceMoving >= _timeMax) GoToRoom();
-        
     }
 
     private void HandleStun()
     {
         if (!_firstStun)
         {
+            _animator.SetTrigger("Stun");
             _agent.enabled = false;
             _agent.speed = 0f;
             _seen = false;
             _teleported = false;
             _isFollowing = false;
-            _animator.SetTrigger("Stun");
             _currentTime = 0f;
+            _isStunned = true;
             EventManager.instance.LookTimeChange(_currentTime);
-            Invoke("GoToRoom",5.0f);
+            Invoke("RecoverFromStun", 5.0f);
         }
         else _firstStun = false;
     }
 
+    private void RecoverFromStun()
+    {
+        _isStunned = false;
+        GoToRoom();
+    }
+
     private void TeleportMonster()
     {
-        int randomIndex = Random.Range(0, _locations.Count);
-        TeleportToLocation(_locations[randomIndex]);
+        Transform targetLocation = GetSecondNearestLocation();
+        TeleportToLocation(targetLocation);
         _agent.enabled = false;
         _agent.speed = 0f;
         _seen = false;
@@ -111,10 +126,10 @@ public class Monster : MonoBehaviour
 
     private void GoToRoom()
     {
-        int randomIndex = Random.Range(0, _locations.Count);
+        Transform targetLocation = GetRandomNonClosestLocation();
         _agent.enabled = true;
         _agent.speed = _speed;
-        _agent.SetDestination(_locations[randomIndex].position);
+        _agent.SetDestination(targetLocation.position);
         _isFollowing = false;
         _seen = false;
         _teleported = false;
@@ -140,6 +155,7 @@ public class Monster : MonoBehaviour
         _timeMax -= 0.5f;
         _teleportChance -= 5;
     }
+
     private bool IsMonsterVisible()
     {
         // Check if the monster is within the screen bounds
@@ -161,7 +177,6 @@ public class Monster : MonoBehaviour
         if (Physics.Raycast(transform.position + _offset, direction, out hit, Mathf.Infinity))
         {
             _detected = hit.transform.CompareTag(_player.tag);
-            //Debug.Log(_detected);
             return _detected;
         }
         return false;
@@ -175,4 +190,18 @@ public class Monster : MonoBehaviour
         }
     }
 
+    private Transform GetSecondNearestLocation()
+    {
+        List<Transform> sortedLocations = new List<Transform>(_locations);
+        sortedLocations.Sort((a, b) => Vector3.Distance(a.position, _player.transform.position).CompareTo(Vector3.Distance(b.position, _player.transform.position)));
+        return sortedLocations.Count > 1 ? sortedLocations[1] : sortedLocations[0];
+    }
+
+    private Transform GetRandomNonClosestLocation()
+    {
+        List<Transform> sortedLocations = new List<Transform>(_locations);
+        sortedLocations.Sort((a, b) => Vector3.Distance(a.position, _player.transform.position).CompareTo(Vector3.Distance(b.position, _player.transform.position)));
+        sortedLocations.RemoveAt(0); // Remove the closest location
+        return sortedLocations[Random.Range(0, sortedLocations.Count)];
+    }
 }

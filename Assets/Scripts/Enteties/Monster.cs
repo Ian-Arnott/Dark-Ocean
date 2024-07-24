@@ -65,9 +65,9 @@ public class Monster : MonoBehaviour
         _currentTime += Time.deltaTime;
         EventManager.instance.LookTimeChange(_currentTime);
         if (_currentTime >= _timeMax) EventManager.instance.EventGameOver(false);
-        else if (_currentTime > _timeMax / 2 && !_chaseSound.isPlaying) // Play sound cue if player looks too long
+        else if (_currentTime > _timeMax / 2 && !_teleportSound.isPlaying) // Play sound cue if player looks too long
         {
-            _chaseSound.Play();
+            _teleportSound.Play();
         }
     }
 
@@ -135,26 +135,28 @@ public class Monster : MonoBehaviour
     private void GoToRoom()
     {
         Transform targetLocation = GetRandomNonClosestLocation();
-        StartCoroutine(HesitateBeforeMoving(targetLocation));
+        MoveMonster(targetLocation,false);
     }
 
     private void FollowPlayer()
     {
-        StartCoroutine(HesitateBeforeMoving(_player.transform));
+        MoveMonster(_player.transform,true);
     }
 
-    private IEnumerator HesitateBeforeMoving(Transform target)
+    private void MoveMonster(Transform target, bool isPlayer)
     {
-        yield return new WaitForSeconds(Random.Range(0.5f, 1.5f)); // Hesitation duration
         _agent.enabled = true;
         _agent.speed = _speed;
         _agent.SetDestination(target.position);
-        _isFollowing = true;
         _seen = false;
         _teleported = false;
         _timeSinceMoving = 0f;
         _timeSinceTeleported = 0f;
-        if (target == _player.transform) _chaseSound.Play(); // Play chase sound if following player
+        if (isPlayer) 
+        {
+            _chaseSound.Play(); // Play chase sound if following player
+            _isFollowing = true;
+        } else _isFollowing = false;
     }
 
     private void IncreaseDifficulty()

@@ -7,6 +7,7 @@ public class SingleDoorController : MonoBehaviour, IDoor
 
     [SerializeField] private bool _isOpen;
     [SerializeField] private Animator _animator;
+    [SerializeField] private AudioSource _audioSource;
 
 
     #region IDOOR_PROPERTIES
@@ -30,5 +31,6 @@ public class SingleDoorController : MonoBehaviour, IDoor
             _animator.Play("SingleDoorClose",0,0.0f);
             _isOpen = false;            
         }
+        _audioSource.Play();
     }
 }

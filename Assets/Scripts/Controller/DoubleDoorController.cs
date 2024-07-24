@@ -8,6 +8,7 @@ public class DoubleDoorController : MonoBehaviour, IDoor
     [SerializeField] private GameObject _rightDoor;
     [SerializeField] private Animator _animator;
     [SerializeField] private bool _isOpen;
+    [SerializeField] private AudioSource _audioSource;
     
 
     #region IDOOR_PROPERTIES
@@ -17,7 +18,6 @@ public class DoubleDoorController : MonoBehaviour, IDoor
     void Start()
     {
         _isOpen = false;
-        // Get a reference to the child GameObject by name
         _leftDoor = Door.transform.Find("Door_Double.L").gameObject;
         _rightDoor = Door.transform.Find("Door_Double.R").gameObject;
     }
@@ -26,19 +26,14 @@ public class DoubleDoorController : MonoBehaviour, IDoor
     {
         if(!_isOpen)
         {
-            // // Move the left door to the left
-            // _leftDoor.transform.position += _leftDoor.transform.right;
-            // // Move the right door to the right
-            // _rightDoor.transform.position -= _rightDoor.transform.right;
             _animator.Play("DoubleDoorOpen",0,0.0f);
             _isOpen = true;
         }
         else
         {
-            // _leftDoor.transform.position -= _leftDoor.transform.right;
-            // _rightDoor.transform.position += _rightDoor.transform.right;
             _animator.Play("DoubleDoorClose",0,0.0f);
             _isOpen = false;
         }
+        _audioSource.Play();
     }
 }

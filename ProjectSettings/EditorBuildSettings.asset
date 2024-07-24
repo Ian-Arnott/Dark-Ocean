@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/LoadLevelScene.unity
     guid: 9d066bf096b70c0d3bbb4df528aa18dc
   - enabled: 1
-    path: Assets/Scenes/ShipScene.unity
-    guid: 3c294838ec65fb3c28198c7d4c68c23b
+    path: Assets/Scenes/LevelScene.unity
+    guid: 4580f374d18f884dd9e51c53a8352471
   - enabled: 1
     path: Assets/Scenes/EndScene.unity
     guid: 90cda12ac90c4e8d4bf56e14bbde40a0

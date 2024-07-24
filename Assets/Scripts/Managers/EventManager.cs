@@ -40,6 +40,7 @@ public class EventManager : MonoBehaviour
     public event Action<float, float> OnBatteryChange;
     public event Action<float, float> OnSprint;
     public event Action<float> OnLookTimeChange;
+    public event Action<int> OnThrowLight;
 
     public event Action<int> OnLightChange;
 
@@ -57,9 +58,13 @@ public class EventManager : MonoBehaviour
         if (OnSprint != null) OnSprint(remaining, maxSprintTime);
     }
 
-    public void LightChange(int lightIndex)
+    public void LightChange(int amount)
     {
-        if (OnLightChange != null) OnLightChange(lightIndex);
+        if (OnLightChange != null) OnLightChange(amount);
+    }
+    public void ThrowLight(int lightIndex)
+    {
+        if (OnThrowLight != null) OnThrowLight(lightIndex);
     }
     #endregion
 

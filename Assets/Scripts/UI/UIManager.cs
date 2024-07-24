@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _sprintBar;
     [SerializeField] private Volume _volume;
     [SerializeField] private Vignette _vignette;
+    [SerializeField] private TMP_Text _text;
 
 
     /* Text References */
@@ -30,6 +32,7 @@ public class UIManager : MonoBehaviour
         EventManager.instance.OnBatteryChange += UpdateBattery;
         EventManager.instance.OnSprint += UpdateBar;
         EventManager.instance.OnLookTimeChange += UpdateVignette;
+        EventManager.instance.OnThrowLight += UpdateThrowLight;
 
          // Get Vignette from Volume
         if (_volume.profile.TryGet(out _vignette))
@@ -66,6 +69,11 @@ public class UIManager : MonoBehaviour
     private void UpdateVignette(float current)
     {
         if (_vignette!=null) _vignette.intensity.value = current/5;
+    }
+
+    private void UpdateThrowLight(int amount)
+    {
+        _text.SetText(amount.ToString());
     }
 
 }

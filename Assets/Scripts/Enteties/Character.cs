@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using StarterAssets;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -25,14 +26,20 @@ public class Character : MonoBehaviour
     // FLASHBANG PREFAB
     [SerializeField] private GameObject _flashbangPrefab;
     [SerializeField] private Transform _throwPoint;
+    [SerializeField] private int _stunlightAmount;
+    [SerializeField] private float _throwCooldown;
+    [SerializeField] private float _throwDelta;
 
     // MONSTER JUMPSCARE
     [SerializeField] private GameObject _monster;
     [SerializeField] private Animator _monsterAnimator;
+    [SerializeField] private FirstPersonController _firstPersonController;
+
     void Start()
     {
         _isOn = false;
         ChangeInventory(0);
+        EventManager.instance.ThrowLight(_stunlightAmount);
         EventManager.instance.OnGameOver += HandleGameOver;
     }
 
@@ -47,10 +54,11 @@ public class Character : MonoBehaviour
     IEnumerator Jumpscare()
     {
         _monster.SetActive(true);
+        Destroy(_firstPersonController);
         Vector3 startPosition = _monster.transform.position;
         Vector3 endPosition = startPosition + new Vector3(0,1,0);
 
-        float duration = 1.0f;
+        float duration = 0.3f;
         float elapsedTime = 0;
 
         while (elapsedTime < duration)
@@ -66,6 +74,11 @@ public class Character : MonoBehaviour
 
     void Update()
     {
+        if (_throwDelta > 0)
+        {
+            _throwDelta -= Time.deltaTime;
+        } else _throwDelta = 0;
+
         if (Input.GetKeyDown(_interact))
         {
             RaycastHit hit;
@@ -86,8 +99,9 @@ public class Character : MonoBehaviour
         if (Input.GetKeyDown(_flashlight)) ChangeInventory(0);
         if (Input.GetKeyDown(_lantern)) ChangeInventory(1);
 
-        if (Input.GetKeyDown(_throwFlashbang))
+        if (Input.GetKeyDown(_throwFlashbang) && _stunlightAmount > 0 && _throwDelta <= 0)
         {
+            _throwDelta = _throwCooldown;
             ThrowFlashbang();
         }
     }
@@ -111,5 +125,7 @@ public class Character : MonoBehaviour
         GameObject flashbang = Instantiate(_flashbangPrefab, _throwPoint.position, _throwPoint.rotation);
         IThrowable throwable = flashbang.GetComponent<IThrowable>();
         throwable.Throw();
+        _stunlightAmount -= 1;
+        EventManager.instance.ThrowLight(_stunlightAmount);
     }
 }

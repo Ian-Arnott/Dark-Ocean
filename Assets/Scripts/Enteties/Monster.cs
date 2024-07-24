@@ -22,14 +22,13 @@ public class Monster : MonoBehaviour
     private bool _detected = false;
     private bool _seen = false;
     private bool _isMoving = false;
-    private Vector3 _previousPosition;
+    private bool _firstStun = true;
 
     private void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
         _speed = 3f;
         _agent.enabled = false;
-        _previousPosition = transform.position;
         TeleportToLocation(_locations[0]); // Start at the first location
         EventManager.instance.OnKeyPickup += IncreaseDifficulty;
         EventManager.instance.OnStun += HandleStun;
@@ -70,11 +69,10 @@ public class Monster : MonoBehaviour
         }
 
         int d100 = 0;
-        d100 = Random.Range(0, 100);
+        if (_seen) d100 = Random.Range(0, 100);
 
         if (_seen && !_isFollowing && d100 < _teleportChance) TeleportMonster();
         else if (_seen && !_isFollowing && d100 >= _teleportChance) FollowPlayer();
-        else if (!_seen && _isFollowing && d100 >= _teleportChance) FollowPlayer();
         
         if (_teleported && _timeSinceTeleported >= _timeMax) TeleportMonster();
         if (_isFollowing && !_isMoving && _timeSinceMoving >= _timeMax) GoToRoom();
@@ -83,15 +81,19 @@ public class Monster : MonoBehaviour
 
     private void HandleStun()
     {
-        _agent.enabled = false;
-        _agent.speed = 0f;
-        _seen = false;
-        _teleported = false;
-        _isFollowing = false;
-        _animator.SetTrigger("Stun");
-        _currentTime = 0f;
-        EventManager.instance.LookTimeChange(_currentTime);
-        Invoke("GoToRoom",5.0f);
+        if (!_firstStun)
+        {
+            _agent.enabled = false;
+            _agent.speed = 0f;
+            _seen = false;
+            _teleported = false;
+            _isFollowing = false;
+            _animator.SetTrigger("Stun");
+            _currentTime = 0f;
+            EventManager.instance.LookTimeChange(_currentTime);
+            Invoke("GoToRoom",5.0f);
+        }
+        else _firstStun = false;
     }
 
     private void TeleportMonster()
